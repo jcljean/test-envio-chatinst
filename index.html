@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Chat Teste Salesforce</title>
+
+<style>
+/* Botão flutuante */
+#chatButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #0070d2;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Janela fake de chat */
+#chatBox {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 200px;
+    background: #f1f1f1;
+    border-radius: 10px;
+    display: none;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+</style>
+
+</head>
+<body>
+
+<h2>Teste de Integração com Bot</h2>
+
+<button id="chatButton" onclick="abrirChatUI()">💬 Chat</button>
+
+<div id="chatBox">
+    <p>Conectando ao atendimento...</p>
+</div>
+
+<script>
+let chatReady = false;
+
+window.addEventListener("onEmbeddedMessagingReady", () => {
+    console.log("✅ Chat Salesforce carregado");
+    chatReady = true;
+});
+
+function abrirChatUI() {
+
+    // mostra a caixinha fake
+    document.getElementById("chatBox").style.display = "block";
+
+    if (!chatReady) {
+        alert("Chat ainda não carregou...");
+        return;
+    }
+
+    try {
+
+        // =========================================
+        // 🔥🔥🔥 AQUI VOCÊ ENVIA OS DADOS PRO SALESFORCE 🔥🔥🔥
+        // =========================================
+        embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+            "Email": "jean@gmail.com",
+            "Plano": "Premium",
+            "Instituidor": "Empresa X",
+            "PAC": "PAC123"
+        });
+        // =========================================
+        // 🔥🔥🔥 FIM DOS DADOS 🔥🔥🔥
+        // =========================================
+
+        console.log("📤 Dados enviados para o bot");
+
+        // abre o chat oficial do Salesforce
+        embeddedservice_bootstrap.utilAPI.launchChat();
+
+    } catch (e) {
+        console.error("Erro:", e);
+    }
+}
+</script>
+
+<!-- ========================================= -->
+<!-- 🔥🔥🔥 COLE AQUI SEU BOOTSTRAP DO SALESFORCE 🔥🔥🔥 -->
+<!-- ========================================= -->
+
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'pt_BR'; // For example, enter 'en' or 'en-US'
+            window.addEventListener( "onEmbeddedMessagingReady", () => {            
+            console.log( "Inside Prechat API!!" );
+            embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields( { 
+                    "Email": "jean@gmail.com",
+                    "Plano": "Premium",
+                    "Instituidor": "Empresa X",
+                    "PAC": "PAC123"
+            } );
+        } );
+			embeddedservice_bootstrap.init(
+				'00DHZ000007HPij',
+				'CA_ChatInstituidorChannel',
+				'https://quantaprevidencia--qa.sandbox.my.site.com/ESWCAChatInstituidorChan1774556545401',
+				{
+					scrt2URL: 'https://quantaprevidencia--qa.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://quantaprevidencia--qa.sandbox.my.site.com/ESWCAChatInstituidorChan1774556545401/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+<!-- ========================================= -->
+<!-- 🔥🔥🔥 FIM DO BOOTSTRAP 🔥🔥🔥 -->
+<!-- ========================================= -->
+
+</body>
+</html>
